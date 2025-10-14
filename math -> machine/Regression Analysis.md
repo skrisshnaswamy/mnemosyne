@@ -33,8 +33,10 @@ Let's say we gathered some data for some days:
 | 30               | 410              |
 
 Now, typically, what as an analyst you'd do is, plot the points in a graph - like a scatter plot to see if there is a visual pattern there!
+![[coffee_sales_vs_temp.png]]
 You could also go a step further and _draw a straight line that **best fits** through the middle of all the points_. This is typically called the ~={blue}line of best fit =~
 
+![[coffee_sales_vs_temp_with_regression_line.png]]
 It serves 2 main purposes:
 1. **Prediction:** The line gives us a model to predict sales for a temperature we ~={red}haven't seen before=~. For example, we could look at the line to estimate sales for a 26°C day.
 2. **Quantifying Error:** The distance from each actual data point to the line shows us how wrong our model's prediction was for that day. In statistics, this error is called a **residual**.
@@ -62,7 +64,7 @@ This would mean:
 ## Types of regression analysis
 
 ```mermaid
-graph TD;
+graph LR;
     A[Regression Analysis] --> B(Logistic Regression)
     A --> C(Linear Regression)
     A --> D(Polynomial Regression)

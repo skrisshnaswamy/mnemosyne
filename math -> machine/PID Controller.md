@@ -3,13 +3,16 @@ tags:
 ---
 PID stands for **P**roprotional **I**ntegral **D**erivative Controller
 
+![[pid.png]]
+
 The story of **control systems** and **stochastic models** is really about how we've learned to make things work the way we want them to, even when the world is messy and unpredictable. It all began with a simple idea: ~={blue}how do you get a system to hit a target and stay there?=~
 
 The **PID controller** is one of the earliest and most successful answers to that question.
 
 ## **P** for Proportional
 
-Imagine you're driving a car and you want to keep it at a constant speed, say 60 mph. Your speedometer shows you're at 55 mph. How would you adjust the gas pedal to get to 60 mph? 🐢
+Imagine you're driving a car and you want to keep it at a constant speed, say 60 mph. Your speedometer shows you're at 55 mph. 🐢
+How would you adjust the gas pedal to get to 60 mph? 
 You press down on the gas pedal!
 But what happens if you press the pedal too much?
 The car speeds up past 60 mph. 🚙💨
