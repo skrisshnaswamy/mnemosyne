@@ -1,66 +1,62 @@
 {
   "main": {
-    "id": "2e5bb8a297a27e73",
+    "id": "466fa5a67830829d",
     "type": "split",
     "children": [
       {
-        "id": "60f2c0877abf046e",
+        "id": "0d23a438c8408943",
         "type": "tabs",
         "children": [
           {
-            "id": "caf0ac24f557de97",
+            "id": "d2bfc25427bbc209",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Fundamentals.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Fundamentals"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           },
           {
-            "id": "b0e45f268b63aee7",
+            "id": "e794816a2385f4ff",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Random variable.md",
+                "file": "Regression Analysis.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Random variable"
+              "title": "Regression Analysis"
             }
           },
           {
-            "id": "fb2c9adb17a16844",
+            "id": "201631c803ce7bfc",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Auto-regressive models.md",
+                "file": "PID Controller.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Auto-regressive models"
+              "title": "PID Controller"
             }
           },
           {
-            "id": "32797f92cbe08a03",
+            "id": "64f530bef4c4a077",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Cross Entropy.md",
+                "file": "Kalman Filter.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Cross Entropy"
+              "title": "Kalman Filter"
             }
           }
         ],
@@ -70,15 +66,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "a9b594650aff552d",
+    "id": "6d7a5aedb39d8995",
     "type": "split",
     "children": [
       {
-        "id": "29d3b6c18751c531",
+        "id": "0b14064199c745c8",
         "type": "tabs",
         "children": [
           {
-            "id": "ae4cea7909285a9a",
+            "id": "a397817cdca3030b",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -91,7 +87,7 @@
             }
           },
           {
-            "id": "8c9619f1711aa114",
+            "id": "27798116c162e42f",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -108,7 +104,7 @@
             }
           },
           {
-            "id": "67a20c7be14136a6",
+            "id": "d2bc428d6c4e1a5a",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -124,48 +120,48 @@
     "width": 300
   },
   "right": {
-    "id": "bacab780b4d49b56",
+    "id": "ca23f4f954dd4c43",
     "type": "split",
     "children": [
       {
-        "id": "11b494038aaee833",
+        "id": "a6b709e5c8c794f5",
         "type": "tabs",
         "children": [
           {
-            "id": "b10cc4bdefdbca57",
+            "id": "181b4964f969da64",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Backpropagation.md",
+                "file": "Kalman Filter.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
                 "searchQuery": "",
-                "backlinkCollapsed": true,
+                "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Backpropagation"
+              "title": "Backlinks for Kalman Filter"
             }
           },
           {
-            "id": "ebec5f08fbbc7bb6",
+            "id": "5e0523cd7a581b9f",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Foundations/Matrix.md",
+                "file": "Kalman Filter.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Matrix"
+              "title": "Outgoing links from Kalman Filter"
             }
           },
           {
-            "id": "3abd0e9968f39e7b",
+            "id": "d480e38c9c642258",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -180,18 +176,18 @@
             }
           },
           {
-            "id": "f4909d94bbc36070",
+            "id": "c9adc3525ed06dcb",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Foundations/Matrix.md",
+                "file": "Kalman Filter.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Matrix"
+              "title": "Outline of Kalman Filter"
             }
           }
         ]
@@ -203,59 +199,29 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
+      "bases:Create new base": false,
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "32797f92cbe08a03",
+  "active": "64f530bef4c4a077",
   "lastOpenFiles": [
-    "Derivative.md",
-    "Fundamentals.md",
-    "Random variable.md",
-    "Auto-regressive models.md",
-    "Backpropagation.md",
-    "Gated Activation.md",
-    "Generative Adverserial Network.md",
-    "KL Divergence.md",
-    "In Context Learning.md",
-    "Linear Projection.md",
-    "Markov Decision Process.md",
-    "Markov Property.md",
-    "Mixed Precision training.md",
-    "Mode Collapse.md",
-    "Momentum.md",
-    "NDCG.md",
+    "References/exam_score_vs_hours_studied_with_reg_line.png",
+    "R-Squared.md",
+    "No U-Turn Sampler.md",
+    "Markov Chain Monte Carlo.md",
+    "Hamiltonian Monte Carlo.md",
+    "Fourier Series Decomposition.md",
+    "Auto-regressive lags.md",
     "PID Controller.md",
-    "Query, Key, and Value (QKV).md",
-    "Multi-variate function.md",
-    "Foundation Models.md",
-    "Flash Attention.md",
-    "Distillation.md",
-    "Cross Entropy.md",
-    "chain rule.md",
-    "Causal Attention.md",
-    "Beliefs.md",
-    "References/pid_error_decay_curve.png",
-    "References/coffee_sales_vs_temp.png",
-    "References/coffee_sales_vs_temp_with_regression_line.png",
-    "coffee_sales_vs_temp.png",
-    "coffee_sales_vs_temp_with_regression_line.png",
-    "References/pid.png",
-    "pid_error_decay_curve.png",
-    "sourcecode/plotter.py",
-    "sourcecode/pid_controller.py",
-    "References/pos_curvature.png",
-    "References/neg_curvature.png",
-    "References/Untitled.canvas",
-    "random variable",
-    "References/Untitled.base",
-    "References",
-    "Foundations"
+    "Kalman Filter.md",
+    "References/kalman_filter.png",
+    "Panel Regression.md",
+    "Regression Analysis.md"
   ]
 }
