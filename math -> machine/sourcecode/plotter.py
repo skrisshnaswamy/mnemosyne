@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 
 def plot_error_decay_curve():
@@ -97,7 +98,37 @@ def plot_regression_line():
 
     print("Graph saved as 'coffee_sales_vs_temp_with_regression_line.png'")
 
+def plot_regression_line_with_seaborn():
+    # For consistent output
+    np.random.seed(42)
+
+    # Generate sample data
+    hours_studied = np.random.uniform(1, 10, 30)  # 30 students, hours between 1 and 10
+    exam_score = 5 * hours_studied + np.random.normal(0, 5, 30)  # Add some noise
+
+    # Create a DataFrame for easy plotting
+    data = pd.DataFrame({
+        'Hours Studied': hours_studied,
+        'Exam Score': exam_score
+    })
+
+    # Set Seaborn style
+    sns.set(style="whitegrid")
+
+    # Create the regression plot
+    plt.figure(figsize=(10, 6))
+    sns.regplot(x='Hours Studied', y='Exam Score', data=data, ci=95, scatter_kws={"color": "blue"}, line_kws={"color": "red"})
+    plt.title('Regression: Exam Score vs Hours Studied')
+    plt.xlabel('Hours Studied')
+    plt.ylabel('Exam Score')
+    plt.tight_layout()
+    plt.savefig("exam_score_vs_hours_studied_with_reg_line.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print("Graph saved as 'exam_score_vs_hours_studied_with_reg_line.png'")
+
 if __name__ == "__main__":
     # plot_error_decay_curve()
-    plot_scatter_plot()
-    plot_regression_line()
+    # plot_scatter_plot()
+    # plot_regression_line()
+    plot_regression_line_with_seaborn()
