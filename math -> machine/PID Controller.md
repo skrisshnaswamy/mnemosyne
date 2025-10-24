@@ -63,4 +63,27 @@ and so
 $PI = K_p.e(t) + K_i \int_{0}^{t} e(\tau)d\tau$
 
 ## **D** for Derivative
+You see the derivate is just the rate of change. And that's exactly the role of the derivative controller. It uses the idea of rate of change to model what to expect in the future.
 
+Let's use the same example of driving the car. But this time imagine you're driving down a **winding road**. This changes the problem to not a single target speed, but to that of a problem of having to **adjust to an ever-changing speed**. Your target is always changing. So with a *P*roportional and *I*ntegral controller, you're always correcting to a new speed. This is very reactive right? 
+As the target keeps rapidly changing,
+- The **Proportional** part would indeed cause the system to be all over the place.
+- The **Integral** part would get a "confused" sense of the error's history. It might incorrectly build up a large value, making the controller overreact when the target is lowered, leading to a huge overshoot.
+The P controller responds to the **now**, and the I controller responds to the **past**. We need something that looks into the **future** - be more proactive. 
+Like when you're driving and a curve is coming on ahead. So you can slow down. But the goal isn't to slow down per se, but to adjust safely - or rather smoothen the ride (have better control).
+
+So going back to the definition. We said derivative is the rate of change. But rate of change of what exactly? The **Derivative Controller** measures the _rate of change of the error / variation_.
+	If the rate is decreasing rapidly, it means you're going to overshoot, so slow down
+	If the rate of change is increasing rapidly, then it means you already retreating away the target, so push harder.
+
+D's adjustment can be computed as $some\_number x rate of change of error at time t$
+
+$$
+adjustment = (some\_new\_number * rate\_of\_change\_of\_error)
+$$
+so $D = K_d \frac{de(t)}{dt}$
+
+$$
+adjustment = (some\_number * current\_error) + (another\_number * sum\_of\_all\_past\_errors) + (some\_new\_number * rate\_of\_change\_of\_error)
+$$
+$PID = K_p.e(t) + K_i \int_{0}^{t} e(\tau)d\tau + K_d \frac{de(t)}{dt}$
