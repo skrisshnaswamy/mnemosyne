@@ -1,38 +1,14 @@
 {
   "main": {
-    "id": "466fa5a67830829d",
+    "id": "e166b1dc8c19df8d",
     "type": "split",
     "children": [
       {
-        "id": "0d23a438c8408943",
+        "id": "bf0fdc59a454fb0a",
         "type": "tabs",
         "children": [
           {
-            "id": "d2bfc25427bbc209",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
-            }
-          },
-          {
-            "id": "e794816a2385f4ff",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Regression Analysis.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Regression Analysis"
-            }
-          },
-          {
-            "id": "64f530bef4c4a077",
+            "id": "ef963962d2918b5d",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -45,22 +21,21 @@
               "title": "PID Controller"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
   },
   "left": {
-    "id": "6d7a5aedb39d8995",
+    "id": "8272123224f65644",
     "type": "split",
     "children": [
       {
-        "id": "0b14064199c745c8",
+        "id": "dbcf97d85d8a7ecd",
         "type": "tabs",
         "children": [
           {
-            "id": "a397817cdca3030b",
+            "id": "ec659e765a55dca9",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -73,7 +48,7 @@
             }
           },
           {
-            "id": "27798116c162e42f",
+            "id": "f754d08717bd44d3",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -90,7 +65,7 @@
             }
           },
           {
-            "id": "d2bc428d6c4e1a5a",
+            "id": "01a6adccb7de837a",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -106,15 +81,15 @@
     "width": 300
   },
   "right": {
-    "id": "ca23f4f954dd4c43",
+    "id": "ccac1784e668318a",
     "type": "split",
     "children": [
       {
-        "id": "a6b709e5c8c794f5",
+        "id": "f7a6d2b7a3d70fef",
         "type": "tabs",
         "children": [
           {
-            "id": "181b4964f969da64",
+            "id": "03ddb40fe195ac38",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -133,7 +108,7 @@
             }
           },
           {
-            "id": "5e0523cd7a581b9f",
+            "id": "99e45355c462c798",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -147,7 +122,7 @@
             }
           },
           {
-            "id": "d480e38c9c642258",
+            "id": "bb4aa9e18c3d2d4b",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -162,7 +137,7 @@
             }
           },
           {
-            "id": "c9adc3525ed06dcb",
+            "id": "128cefef4ea8c60a",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -195,25 +170,6 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "64f530bef4c4a077",
-  "lastOpenFiles": [
-    "Regression Analysis.md",
-    "PID Controller.md",
-    "Panel Regression.md",
-    "No U-Turn Sampler.md",
-    "NDCG.md",
-    "Momentum.md",
-    "Mode Collapse.md",
-    "Mixed Precision training.md",
-    "Markov Property.md",
-    "Markov Decision Process.md",
-    "Markov Chain Monte Carlo.md",
-    "Kalman Filter.md",
-    "References/exam_score_vs_hours_studied_with_reg_line.png",
-    "R-Squared.md",
-    "Hamiltonian Monte Carlo.md",
-    "Fourier Series Decomposition.md",
-    "Auto-regressive lags.md",
-    "References/kalman_filter.png"
-  ]
+  "active": "ef963962d2918b5d",
+  "lastOpenFiles": []
 }

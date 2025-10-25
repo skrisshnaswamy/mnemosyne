@@ -63,9 +63,15 @@ and so
 $PI = K_p.e(t) + K_i \int_{0}^{t} e(\tau)d\tau$
 
 ## **D** for Derivative
-You see the derivate is just the rate of change. And that's exactly the role of the derivative controller. It uses the idea of rate of change to model what to expect in the future.
 
-Let's use the same example of driving the car. But this time imagine you're driving down a **winding road**. This changes the problem to not a single target speed, but to that of a problem of having to **adjust to an ever-changing speed**. Your target is always changing. So with a *P*roportional and *I*ntegral controller, you're always correcting to a new speed. This is very reactive right? 
+You see, the **derivative** is just the _rate of change_. And that’s exactly what the **Derivative controller** uses — it models how fast the error is changing right now to predict what might happen next.
+
+> [!NOTE] Car example
+> Think about our car again. When you're driving, but this time imagine you're driving down a **winding road**; and you see a sharp curve coming up, what's something you do _before_ you even get to the turn?
+> As a good driver, you don't just react to the fact that you're going too fast for the turn (the current error); you're looking ahead at how quickly the turn is approaching and proactively adjusting your speed to get ready for it.
+> This proactive part is the job of the **Derivative** component!
+
+This changes the problem from a single target speed, but to that of a problem of having to **adjust to an ever-changing speed**. Your target is always changing. So with a *P*roportional and *I*ntegral controller, you're always correcting to a new speed. This is very reactive right? 
 As the target keeps rapidly changing,
 - The **Proportional** part would indeed cause the system to be all over the place.
 - The **Integral** part would get a "confused" sense of the error's history. It might incorrectly build up a large value, making the controller overreact when the target is lowered, leading to a huge overshoot.
@@ -73,6 +79,7 @@ The P controller responds to the **now**, and the I controller responds to the *
 Like when you're driving and a curve is coming on ahead. So you can slow down. But the goal isn't to slow down per se, but to adjust safely - or rather smoothen the ride (have better control).
 
 So going back to the definition. We said derivative is the rate of change. But rate of change of what exactly? The **Derivative Controller** measures the _rate of change of the error / variation_.
+The derivative component is like a dampener or a brake. It helps to smooth out the controller's response and prevents the kind of wild oscillations you were talking about earlier. It measures the **rate of change of the error**.
 	If the rate is decreasing rapidly, it means you're going to overshoot, so slow down
 	If the rate of change is increasing rapidly, then it means you already retreating away the target, so push harder.
 
@@ -83,7 +90,20 @@ adjustment = (some\_new\_number * rate\_of\_change\_of\_error)
 $$
 so $D = K_d \frac{de(t)}{dt}$
 
+So,
+1. The **Proportional** part reacts to the **current** error. It's the primary engine of the controller.
+2. The **Integral** part corrects for **past** errors, ensuring the system eventually hits the target precisely.
+3. The **Derivative** part anticipates **future** errors based on the current rate of change, making the response smoother and more stable.
+
 $$
 adjustment = (some\_number * current\_error) + (another\_number * sum\_of\_all\_past\_errors) + (some\_new\_number * rate\_of\_change\_of\_error)
 $$
 $PID = K_p.e(t) + K_i \int_{0}^{t} e(\tau)d\tau + K_d \frac{de(t)}{dt}$
+
+Essentially, we use the *cumulative past errors* to speed up (or to add) and we use the *rate of change of the error* (current vs the past) to stabilise (it's job is to oppose the _rate of change_ of the error) and the current error point estimate to simply figure out how much to add or subtract to hit the target.
+
+---
+# ⁉️
+But what if our sensors are noisy? and we don't have perfect information about our speed or position? What if the very "state" of our system is uncertain?
+If you can't tell the difference between a real change and a noisy sensor reading, you'll be constantly misled. This leads to the next big breakthrough: the **[[Kalman Filter]]**.
+
