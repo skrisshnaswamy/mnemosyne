@@ -54,7 +54,7 @@ The penalty barely increases. But with `-log(p)`:
 > - Loss for $p=0.1$ is $-log(0.1) ≈ 2.3$.
 > - Loss for $p=0.01$ is $-log(0.01) ≈ 4.6$.
 >
-The penalty **doubled**. It explodes as the model gets more confidently wrong, creating a massive [[Gradient]] that forces the model to correct its biggest mistakes quickly.
+The penalty **doubled**. It explodes as the model gets more confidently wrong, creating a massive [[Derivative#Gradient|gradient]] that forces the model to correct its biggest mistakes quickly.
 
 ---
 
@@ -81,6 +81,6 @@ This value, 0.51, is the error for this one example.
 
 ### Step 3: Learning (The Backward Pass)
 
-The loss is used to calculate a [[Gradient]]. This gradient is a set of directions for the model's internal parameters. The directions essentially say: "Adjust yourselves so that next time you see this cat image, your prediction `p` is higher than 0.6."
+The loss is used to calculate a [[Derivative#Gradient|gradient]]. This gradient is a set of directions for the model's internal parameters. The directions essentially say: "Adjust yourselves so that next time you see this cat image, your prediction `p` is higher than 0.6."
 
 By repeating this process thousands of times with different cat and dog images, the model slowly learns to produce a high `p` value for cats and a low `p` value for dogs.

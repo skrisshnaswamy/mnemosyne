@@ -4,11 +4,25 @@
     "type": "split",
     "children": [
       {
-        "id": "bf0fdc59a454fb0a",
+        "id": "9868d585213a8eba",
         "type": "tabs",
         "children": [
           {
-            "id": "ef963962d2918b5d",
+            "id": "f71a0cbf94bf7701",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Deep Learning.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Deep Learning"
+            }
+          },
+          {
+            "id": "b55f04d87801c4cb",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -19,6 +33,34 @@
               },
               "icon": "lucide-file",
               "title": "PID Controller"
+            }
+          },
+          {
+            "id": "4e7b8260e2aa25ad",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Random variable.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Random variable"
+            }
+          },
+          {
+            "id": "e8a7f26910dce8cf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Backpropagation.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Backpropagation"
             }
           }
         ]
@@ -94,7 +136,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "PID Controller.md",
+                "file": "Random variable.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +146,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for PID Controller"
+              "title": "Backlinks for Random variable"
             }
           },
           {
@@ -113,12 +155,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "PID Controller.md",
+                "file": "Random variable.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from PID Controller"
+              "title": "Outgoing links from Random variable"
             }
           },
           {
@@ -142,13 +184,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "PID Controller.md",
+                "file": "Random variable.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of PID Controller"
+              "title": "Outline of Random variable"
             }
           }
         ]
@@ -170,6 +212,30 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "ef963962d2918b5d",
-  "lastOpenFiles": []
+  "active": "f71a0cbf94bf7701",
+  "lastOpenFiles": [
+    "Untitled.canvas",
+    "Deep Learning.md",
+    "Markov Chain Monte Carlo.md",
+    "Mixed Precision training.md",
+    "Markov Property.md",
+    "Markov Decision Process.md",
+    "Random variable.md",
+    "Backpropagation.md",
+    "PID Controller.md",
+    "!NOTE.md",
+    "R-Squared.md",
+    "Cross Entropy.md",
+    "Gradient Descent.md",
+    "Derivative.md",
+    "Gradient.md",
+    "Fundamentals.md",
+    "Kalman Filter.md",
+    "Linear Projection.md",
+    "Auto-regressive models.md",
+    "^backprop.md",
+    "Auto-regressive lags.md",
+    "Pytorch Autograd.md",
+    "No U-Turn Sampler.md"
+  ]
 }
