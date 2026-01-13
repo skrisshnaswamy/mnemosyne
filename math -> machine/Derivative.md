@@ -31,7 +31,9 @@ And when you start learning about partial derivatives, you will learn terms like
 ---
 # Gradient
 
-Gradients are nothing but the [[Derivative#Partial Derivative|partial derivatives]] of a [[Fundamentals#Multi-variate function|mutli-variate function]]. Well, very similar to how a single equation of multi-variate function is represented as an _algebraic equation_, but if you have $n$ such equations they are called a _system of algebraic equations_. And such a _system of algebraic equations_ can be alternatively represented in the form of a [[Fundamentals#Matrix|matrix]]. Exactly like that, when you think of representing all the $n$ partial derivatives of a single multi-variate function - we end up with a _vector_ of size $n$
+> [!ABSTRACT] Gradients are nothing but the [[Derivative#Partial Derivative|partial derivatives]] of a [[Fundamentals#Multi-variate function|mutli-variate function]]. 
+
+Well, very similar to how a single equation of multi-variate function is represented as an _algebraic equation_, but if you have $n$ such equations they are called a _system of algebraic equations_. And such a _system of algebraic equations_ can be alternatively represented in the form of a [[Fundamentals#Matrix|matrix]]. Exactly like that, when you think of representing all the $n$ partial derivatives of a single multi-variate function - we end up with a _vector_ of size $n$
 For a function $f$ where $f(x_1, x_2, ... x_n)$
 - rate of change in the direction of $x_1$ would be $\dfrac{\delta}{\delta x_1} f$ 
 - rate of change in the direction of $x_2$ would be $\dfrac{\delta}{\delta x_2} f$ 
@@ -54,7 +56,7 @@ It is also a square, symmetric matrix.
 
 ### Application & Intuition
 
-While the [[Derivative#Gradient|gradient]] tells us the slope or "direction" of a function, the Hessian tells us about its **curvature**. It helps us understand if a function's critical point is a minimum, maximum, or a saddle point.
+> [!INFO] While the [[Derivative#Gradient|gradient]] tells us the slope or "direction" of a function, the Hessian tells us about its **curvature**. It helps us understand if a function's critical point is a minimum, maximum, or a saddle point.
 
 ### Role in Machine Learning & Statistics
 
@@ -139,7 +141,8 @@ So, think of the Hessian as the tool that lets us understand the full, rich geom
 
 ### Hessian and Momentum
 
-~={red} **No, Hessian and Momentum aren't exactly the same!** =~
+> [!WARNING] **No, Hessian and Momentum aren't exactly the same!**
+
 But it's a good segue to understand [[Momentum]] after understanding Hessian. You see, in a way, hessian and momentum, both are ways to navigate a complex loss function landscape - they both try to solve similar problem with gradient decent. I.e. whether to speed up or slow down the learning, when navigating the terrain. ~={blue} But, they use very different information to do this.=~
 
 #### The Core Idea: Past vs. Present
@@ -178,11 +181,13 @@ This is where you can see there's no second derivative.
 
 Notice that the momentum update only uses the `current_gradient` (the first derivative) and the `velocity` from the last step. The `beta` term is a friction-like constant (e.g., 0.9) that determines how much of the past velocity is kept. There's no Hessian (`H`) anywhere in the calculation.
 
-~={green}**But here is the catch!
+> [!SUCCESS] But here is the catch!
+> 
 Gradient is like the property of the landscape (in ML terms - the feature space) but velocity is like the property of the learning algo which is trying to model this feature space.
+
 ---
 You see, when you analyze a function, you have fundamental properties like the function's value, its derivative (slope), and its second derivative (curvature). These exist regardless of how you analyze the function. But **"velocity" is a concept we borrow from physics** and **not** a fundamental property of the loss function. It is a **stateful variable created and maintained by the optimization algorithm itself.** It's just an **Exponentially Weighted Moving Average (EWMA) of the past gradients**.
-=~
+
 ### Summary Table
 
 | Feature       | **Gradient Descent**                                  | **Momentum**                                              | **Second-Order Methods (Newton's)**                                         |

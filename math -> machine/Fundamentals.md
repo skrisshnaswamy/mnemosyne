@@ -1,11 +1,15 @@
 # Linear Algebra
 
-Reference: https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
+>[!ABSTRACT] ▶️ 3Blue1Brown: Linear Algebra
+>[![## 3B1B Linear Algebra](https://img.youtube.com/vi/fNk_zzaMoSs/0.jpg)](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab&index=1)
+
 
 ---
 # Matrix
 Think of matrix as just a way of representation. Like when we've a point in space which can be represented by a single scalar value then such a space is called a one-dimensional space and then value is just a point on that $1D$ space, and if the value is represented with 2 features or 2 values $x, y$ then the space is a $2D$ space (plane) and the $x,y,z$ point is a point in $3D$ plane / space and so on. When we've a $N$ dimensional space / hyperplane, points in such a space can be represented as **Vectors** and a collection of $M$ such vectors is neatly represented into a **Matrix**.
-There is this really intriging way, where the points and space stops being all about the physical dimensions in which object exist and starts to become this virtual non-tangible "space" which starts to mean a system and "points" start to mean "samples" and each "dimension" of such a space start to mean "feature".
+
+> [!TIP] There is this really intriguing way, where the points and space stops being all about the physical dimensions in which object exist and starts to become this virtual non-tangible "space" which starts to mean a system and "points" start to mean "samples" and each "dimension" of such a space start to mean "feature".
+
 This basically gives Matrix 2 different perspectives to be looked from.
 1. **As a container for numbers:** A neat, grid-like representation of data.
 2. **As a collection of points in space:** Where each row (or column) is a vector representing a sample in a high-dimensional "feature space."
