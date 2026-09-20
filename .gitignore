@@ -1,3 +1,6 @@
 .DS_Store
 .obsidian
 .obsidian/
+
+# Claude project memory — kept local, backed up manually
+CLAUDE.md

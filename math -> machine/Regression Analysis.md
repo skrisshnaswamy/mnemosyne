@@ -1,3 +1,16 @@
+---
+aliases:
+  - Regression
+tags:
+  - fundamentals
+  - statistics
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** Fit a line (or curve) through your data so you can **predict** an outcome and **quantify** how much each input moves it.
+> **Metaphor:** Coffee sales vs temperature. Draw the best line through the scatter; its slope tells you pounds-per-degree.
+> **Where it bites:** The base of all of supervised learning. Also: **correlation is not causation** — a regression coefficient is not an effect.
+
+---
 It's a stats tool used to understand and model relationships between variables.
 Typically the relationship between a **dependent** variable (thing you're trying to predict) with **independent** variables (things you know and the factors that you think influence the target / dependent variables)
 
@@ -109,3 +122,41 @@ This is a hybrid of Ridge and Lasso regression. It combines the penalties from b
 > * **When to use it**: It's a go-to when you're not sure whether Ridge or Lasso would be better. It gives you the best of both worlds, offering a balance between handling correlated predictors and simplifying the model.
 
 ---
+
+# How the line is actually found
+
+The "best fit" line needs a definition of *best*. The standard answer is **OLS — Ordinary Least Squares**: choose $\beta_0, \beta_1$ that minimise the **sum of squared residuals**.
+
+$$\min_{\beta} \sum_i (y_i - \hat{y}_i)^2$$
+
+Why *squared* rather than absolute error? Squaring makes the objective smooth and differentiable everywhere, which means there's a clean closed-form solution — and it also punishes large errors disproportionately. That second property is a real trade-off, not a free win: it makes OLS **sensitive to outliers**, which is precisely the L1-vs-L2 argument in [[Loss, Objectives, and Business Alignment#**L1 vs. L2 Loss**|L1 vs L2 Loss]]. 🏚️
+
+> [!TIP] It's the same machinery as everything else
+> Minimising squared error *is* a [[Loss, Objectives, and Business Alignment|loss function]]. The [[Derivative#Hessian|Hessian]] of that loss is what gives you the standard errors and p-values in your regression output. And Ridge/Lasso below are just [[Regularization#L2 penalty (Ridge / Weight Decay)|L2 and L1 penalties]] bolted onto the same objective.
+>
+> ~={blue}Linear regression is a one-layer neural network with no activation function=~, trained on MSE. Everything scales up from here. ^regression-is-the-base-case
+
+---
+# What the assumptions buy you, and how they break
+
+OLS gives unbiased estimates *if* a set of assumptions hold. Worth knowing which, because the violations are what you'll actually hit:
+
+| Assumption | If violated |
+|---|---|
+| **Linearity** | The model systematically misses the shape. Check residual plots |
+| **Independent errors** | Standard errors are wrong → false confidence. Common in time series → see [[Auto-regressive lags]] |
+| **Constant variance** (homoscedasticity) | Standard errors wrong again. Use robust SEs |
+| **No perfect multicollinearity** | Coefficients become unstable and uninterpretable → Ridge helps |
+| **Exogeneity** ($X$ uncorrelated with the error) | **Biased coefficients.** The one that matters most for causal claims |
+
+> [!WARNING] A coefficient is not a causal effect
+> $\beta_1 = 12$ means *"units that differ by one degree differ by $12 in sales, on average, in this data."* It does **not** mean raising the temperature by a degree causes $12 more sales.
+>
+> Omitted variables, reverse causality and selection all break that reading — that's the exogeneity assumption failing. Getting from correlation to causation needs a design (randomisation, a natural experiment, an instrument), not a better model. See [[Decision Sciences]]. ^coefficient-is-not-causal
+
+And to judge how well the line fits at all → [[R-Squared]].
+When you have many units observed over many periods → [[Panel Regression]].
+
+---
+# ⁉️
+Regression predicts a **continuous** outcome by minimising squared error. Swap the outcome for a **category** and the loss for [[Cross Entropy]], and you have logistic regression — and from there, every classifier in [[Deep Learning]].

@@ -1,3 +1,21 @@
+---
+aliases:
+  - Loss Function
+  - Loss Functions
+  - L1 vs L2 Loss
+  - Huber Loss
+  - MAE vs MSE
+tags:
+  - fundamentals
+  - training
+  - optimization
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** The loss is how you tell the model what "good" means. **L2** squares the error so outliers dominate; **L1** doesn't, so it's robust — but its pointy bottom needs a sub-gradient and a decaying learning rate. **Huber** gets you both.
+> **Metaphor:** House prices. Most homes are $300k, a few are $10M mansions — and the question is whether the mansions get to drag the whole model toward them.
+> **Where it bites:** Picking MAE vs MSE when there are outliers, a model that jitters around the optimum and never settles, and any second-order optimizer that needs a smooth loss.
+
+---
 >[!SUCCESS] _How models are told what “good” means?_
 
 ---
@@ -80,3 +98,13 @@ Sometimes you want the robustness of L1 (to ignore those $10M mansion outliers) 
 ### 3. Coordinate Descent
 
 For some specific models (like **LASSO** regression), we don't use Gradient Descent at all. We use **Coordinate Descent**, where we optimize one feature at a time while holding the others constant. This bypasses the need for a global derivative entirely.
+
+---
+> [!SUCCESS] If you remember one thing
+> Choosing a loss is choosing **which mistakes you're willing to live with**. L2 says "big misses are unforgivable"; L1 says "a miss is a miss". ~={pink}Neither is more correct — it's a statement about the business, written in maths.=~
+
+---
+# ⁉️
+The same $|x|$ vs $x^2$ pair comes back wearing different clothes — applied to the **weights** instead of the errors, where it fights overfitting rather than outliers → [[Regularization]].
+When the outcome is a category rather than a number, the loss changes entirely → [[Cross Entropy]].
+And the uncomfortable follow-up: what if the loss you wrote down is only a *proxy* for what the business actually wanted? → [[Reward Hacking]].

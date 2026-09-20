@@ -1,3 +1,21 @@
+---
+aliases:
+  - Recommender Systems
+  - RecSys
+  - Recommendation Systems
+  - MOC - RecSys
+tags:
+  - recsys
+  - ranking
+  - retrieval
+  - architecture
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** The story of recommenders in six moves — look at **similar people** (CF) → learn **hidden traits** (MF) → go **non-linear** (NeuMF, Wide & Deep) → split into **retrieve-then-rank** (YouTube, two-tower) → give IDs **meaning** (semantic IDs, knowledge graphs) → just **generate** the next item (TIGER, HSTU).
+> **Metaphor:** Each part is a fix for what the previous one couldn't do. CF can't handle sparsity. MF can't do non-linear. One big model can't do billions of items. Arbitrary IDs carry no meaning.
+> **Where it bites:** "Why two towers and not one model?", "why a funnel?", cold start, and why generative retrieval drags LLM machinery — tokenization, beam search, temperature — into RecSys.
+
+---
 ### Part 1 — The early days: simple, but powerful
 
 Think of recommender systems starting with very human-style intuition.
@@ -380,3 +398,12 @@ To prevent the system from getting "stuck" in a boring, biased loop, researchers
 - **Temperature Sampling:** Before doing beam search, we can add "heat" (Temperature) to the model. This makes the probabilities flatter, giving lower-ranked tokens a better chance to make it into the top 3. 🌡️
 - **Stochastic Beam Search:** Instead of just picking the top 3 "best," the model picks 3 tokens **randomly**, but gives the higher-probability ones a better "weight" or chance to be picked. This introduces a bit of "luck" and exploration! 🎲
 
+---
+> [!SUCCESS] If you remember one thing
+> The whole history is one tension played over and over: ~={pink}**memorise what worked vs generalise to what's new**=~ — under a latency budget that never lets you score everything. CF memorises, MF generalises, Wide & Deep does both on purpose, and the funnel exists because you can't afford to be clever about a billion items at once.
+
+---
+# ⁉️
+Notice where Part 5 onwards landed: item IDs became **tokens**, recommendation became **next-token prediction**, and the decoding problems are the LLM ones. Same machinery → [[Tokenization]], [[Sampling Parameters]], [[Embeddings]], [[Vector Database]].
+How you'd know any of these rankers is actually better → [[NDCG]].
+The papers behind each part, in order → [[Foundational_RecSys_Ranking_Reading_Plan]].

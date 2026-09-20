@@ -1,3 +1,17 @@
+---
+aliases:
+  - Seq2Seq
+  - Sequence to Sequence
+tags:
+  - fundamentals
+  - transformers
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** A **task shape** — sequence in, sequence out. It says nothing about *how* the output is produced.
+> **Metaphor:** "Translate this paragraph." That's the job description. Whether you write it word-by-word or draft-and-revise is a separate decision.
+> **Where it bites:** The seq2seq / [[Auto-regressive models|autoregressive]] distinction, and encoder-decoder vs decoder-only.
+
+---
 So the term **sequence-to-sequence (seq2seq)** simply means that a model **takes a sequence as input and produces another sequence as output**.  
 In other words, it is a **mapping from one ordered set of tokens to another ordered set of tokens**.
 
@@ -96,14 +110,52 @@ And the follow-up questions you should always ask are:
 - Is this **encoder-decoder or decoder-only**?
     
 - How is the input sequence **conditioned on**?
-    
 
 ---
+# Seq2Seq vs Autoregressive — the contrast box
 
-If you want, I can also:
+These two get used interchangeably and they are **not** the same kind of claim. This is the distinction worth having sharp:
 
-- Rewrite this to **perfectly mirror** your autoregressive note line-by-line
-    
-- Add a **contrast box**: _Seq2Seq vs Autoregressive_
-    
-- Turn this into **Obsidian-style linked notes** (`[[Encoder-Decoder]]`, `[[Cross Attention]]`, etc.)
+| | **Seq2Seq** | **[[Auto-regressive models\|Autoregressive]]** |
+|---|---|---|
+| It describes | the **task** | the **generation method** |
+| Answers | *what* am I mapping? | *how* do I produce output? |
+| Sequence in? | ✅ required | not necessarily |
+| Sequence out? | ✅ required | ✅ |
+| One token at a time? | **not required** | ✅ by definition |
+| Example that is only this | non-autoregressive translation | unconditional text generation |
+
+> [!SUCCESS] The one-line rule
+> ~={blue}Seq2seq is a **problem statement**. Autoregression is a **solution strategy**.=~ Most seq2seq models happen to be autoregressive, which is why the two get conflated — but a diffusion-based translator is seq2seq and **not** autoregressive, and a language model completing a prompt is autoregressive without being seq2seq in the classical sense. ^seq2seq-vs-ar
+
+---
+# The bottleneck problem — why cross-attention exists
+
+Worth knowing, because it's the historical reason attention was invented in the first place.
+
+The original (2014) encoder-decoder squeezed the **entire** input sequence into one fixed-size vector, and the decoder generated everything from that. It worked for short sentences and fell apart on long ones — you cannot compress a 50-word sentence into 512 numbers without losing something. 🍾
+
+Bahdanau's fix (2015): let the decoder look back at **all** the encoder's hidden states, and learn which to focus on at each output step.
+
+That was **attention**, and it was invented specifically to remove this bottleneck — two years before [[Attention Is All You Need|"Attention Is All You Need"]] proposed dropping the recurrence and keeping only the attention.
+
+In the transformer this became **cross-attention**: the decoder supplies $Q$, the encoder supplies $K$ and $V$. See [[Query, Key, and Value (QKV)#Self-attention vs cross-attention|self vs cross attention]] — the formula is identical, only the source of the three inputs changes.
+
+---
+# Encoder-decoder vs decoder-only, in practice
+
+| | **Encoder-decoder** (T5, BART) | **Decoder-only** (GPT, LLaMA) |
+|---|---|---|
+| Input processing | bidirectional — sees the whole input at once | causal — even over the prompt |
+| Separation | explicit input/output boundary | one flat concatenated sequence |
+| Strong at | translation, summarisation, fixed transductions | general-purpose, open-ended |
+| Parameters | two stacks | one, so simpler to scale |
+
+> [!TIP] Why decoder-only won anyway
+> Encoder-decoder is arguably the *better fit* for seq2seq tasks — the input genuinely deserves bidirectional treatment. Decoder-only models won because **one stack scales more simply**, they train on any text without needing input/output pairs, and [[In Context Learning|in-context learning]] lets one model handle every task without a task-specific architecture.
+>
+> A good example of the more elegant design losing to the more scalable one. 📈
+
+---
+# ⁉️
+The masking that makes the decoder half work is [[Causal Attention]]; the mechanism it uses to look back at the encoder is [[Query, Key, and Value (QKV)]].

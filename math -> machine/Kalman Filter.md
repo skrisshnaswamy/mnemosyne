@@ -1,3 +1,20 @@
+---
+aliases:
+  - Kalman
+  - Kalman Gain
+  - State Estimation
+tags:
+  - control-theory
+  - decision-sciences
+  - probability
+  - bayesian
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** Blend two imperfect sources — a **prediction** from your model and a **measurement** from a noisy sensor — weighting each by how much you trust it. That weight is the **Kalman gain**.
+> **Metaphor:** A rocket 🚀 and a radar. Physics says 1,000 ft, the radar says 1,100 ft. Which one do you believe, and by how much?
+> **Where it bites:** Any time the thing you care about can't be observed directly — tracking, sensor fusion, smoothing a jittery metric. It's also the first place a system stores a **belief** instead of a number.
+
+---
 The Kalman filter is a way to deal with uncertainty by combining two sources of information that are both imperfect.
 
 ---
@@ -32,3 +49,16 @@ The filter does need some initial information about the uncertainty of its input
     
 
 So, the filter starts with a guess about the initial state and its uncertainty, and it uses those two values you provided to figure out the first Kalman Gain.
+
+---
+> [!SUCCESS] If you remember one thing
+> The filter doesn't look at the numbers, it looks at the **uncertainty attached to them**. ~={pink}Trust is inversely proportional to uncertainty=~ — a noisy sensor gets a low gain, a shaky model gets a high one. Predict, measure, blend, repeat.
+
+---
+# ⁉️
+So now we have a best guess of the state — and notice it isn't really a number any more, it's a guess *with an uncertainty attached*. That object has a name: a [[Beliefs|belief]].
+And knowing where you are only gets you half way. The next question is what to **do** about it when your choice now changes the situation you'll face later.
+
+→ [[Decision Sciences#3. Decisions become mathematical|Decisions become mathematical]] → [[Markov Decision Process]]
+
+Next in the [[Control and Reinforcement Learning]] chain — the general recipe this filter is one special case of → [[Bayes Filter]]

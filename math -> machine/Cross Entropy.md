@@ -1,3 +1,19 @@
+---
+aliases:
+  - Cross-Entropy
+  - CE Loss
+  - Log Loss
+tags:
+  - fundamentals
+  - information-theory
+  - loss
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** The **average surprise** you get when you use your model's probabilities to describe what actually happens.
+> **Metaphor:** Weather forecasting. Predict 70% sun when it's really 90% sun, and you'll be "surprised" more often than you needed to be.
+> **Where it bites:** The default loss for every classification task and every language model. Gotcha: `nn.CrossEntropyLoss` wants **logits**, not probabilities.
+
+---
 Cross-Entropy is a [[Loss Function]] used in classification tasks, and its name comes from the concept of [[Entropy]] in [[Information Theory]]. My initial thought was that entropy meant "information loss," but it's more accurate to think of it as a measure of **uncertainty** or **average surprise**.
 ## Intuition
 Imagine our only goal is to predict if tomorrow will be sunny ☀️ or rainy 🌧️.
@@ -84,3 +100,43 @@ This value, 0.51, is the error for this one example.
 The loss is used to calculate a [[Derivative#Gradient|gradient]]. This gradient is a set of directions for the model's internal parameters. The directions essentially say: "Adjust yourselves so that next time you see this cat image, your prediction `p` is higher than 0.6."
 
 By repeating this process thousands of times with different cat and dog images, the model slowly learns to produce a high `p` value for cats and a low `p` value for dogs.
+
+---
+# The relationship to entropy and KL — all three in one place
+
+These three get muddled constantly. They're the same quantity sliced differently:
+
+| | What it measures | Floor |
+|---|---|---|
+| **Entropy** $H(P)$ | Average surprise using **reality's own** probabilities | The irreducible minimum |
+| **Cross-entropy** $H(P,Q)$ | Average surprise using **your model's** probabilities | $\geq H(P)$, always |
+| **[[KL Divergence]]** $D_{KL}(P \parallel Q)$ | The **gap** between them — purely your model's fault | $\geq 0$, zero iff perfect |
+
+$$H(P,Q) = \underbrace{H(P)}_{\text{unavoidable}} + \underbrace{D_{KL}(P \parallel Q)}_{\text{your error}}$$
+
+> [!SUCCESS] Why we minimise cross-entropy and not KL
+> They differ by $H(P)$ — and $H(P)$ is a property of the **data**, not of your model. It's a constant. Minimising cross-entropy and minimising KL are therefore ~={blue}the exact same optimisation problem=~, and cross-entropy is simply cheaper to compute (you never need to know the true entropy).
+>
+> Which means: **training with cross-entropy loss *is* minimising forward KL to the data distribution.** That's why it's mode-covering — see [[KL Divergence#Forward KL vs Reverse KL|forward vs reverse KL]]. ^ce-vs-kl
+
+---
+# The practical gotchas
+
+> [!WARNING] `nn.CrossEntropyLoss` takes **logits**, not probabilities
+> The single most common bug in this area. PyTorch's `CrossEntropyLoss` applies `log_softmax` **internally**. If you put a softmax in your model's final layer and then use this loss, you've applied softmax twice — training will still "work", just badly and slowly, with no error raised. 🐛
+>
+> - Raw logits → `nn.CrossEntropyLoss`
+> - Already log-probabilities → `nn.NLLLoss`
+> - Binary, raw logits → `nn.BCEWithLogitsLoss` (**not** `BCELoss`) ^logits-not-probs
+
+**Why the fused version exists.** Computing softmax then log separately overflows for large logits. Combining them allows the *log-sum-exp trick* — subtract the max logit before exponentiating — which is numerically stable. This is why you should essentially never hand-roll it.
+
+**Class imbalance.** With 99% negatives, predicting "negative" always gives a low loss and a useless model. Fixes: class weights in the loss, or **focal loss**, which down-weights already-easy examples so the gradient focuses on the hard ones.
+
+**Label smoothing.** Training toward $[0,0,1,0]$ pushes the correct logit toward $+\infty$ — the model becomes overconfident and badly calibrated. Softening the target to $[0.02,0.02,0.94,0.02]$ caps that. See [[Regularization#Label smoothing|label smoothing]] and [[Uncertainty#How you actually get a number out of a model|calibration]].
+
+**Perplexity.** For language models you'll usually see perplexity rather than loss: $\text{PPL} = e^{\text{cross-entropy}}$. It's the same number, exponentiated, and it has a nice reading — *"the model is effectively choosing uniformly among this many tokens."* A perplexity of 20 means it's about as uncertain as picking from 20 equally likely words. 📖
+
+---
+# ⁉️
+Cross-entropy measures the gap between prediction and truth. The isolated gap itself — and the crucial fact that it is **asymmetric** — is [[KL Divergence]].

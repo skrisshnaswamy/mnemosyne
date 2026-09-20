@@ -1,3 +1,19 @@
+---
+aliases:
+  - Linear Algebra
+  - Matrix
+  - Vectors
+  - Multi-variate function
+tags:
+  - fundamentals
+  - linear-algebra
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** The base vocabulary — a **vector** is a point (a sample), a **matrix** is a collection of them *or* a machine that transforms them, and a **function** is a deterministic input → output box.
+> **Metaphor:** A sheet of graph paper. A matrix is a command that rotates, stretches or squishes the whole sheet at once.
+> **Where it bites:** Everything downstream. A neural-net layer *is* a matrix transformation plus a non-linearity, and a model is one giant multi-variate function.
+
+---
 # Linear Algebra
 
 >[!ABSTRACT] ▶️ 3Blue1Brown: Linear Algebra
@@ -48,4 +64,11 @@ A function which takes in more than 1 input.
 Example: $F(x_1, x_2, ... x_n) = Y$
 
 ---
+> [!SUCCESS] If you remember one thing
+> A matrix has three faces: a **container** of numbers, a **cloud of points** in feature space, and a **transformation** of that space. ~={pink}Most of ML clicks once you can switch between the three at will.=~
 
+---
+# ⁉️
+A function is a predictable machine — so we can ask *how much* the output moves when we nudge the input. That's the [[Derivative]].
+And when the machine *isn't* predictable, when the same input can give different outputs, you're dealing with a [[Random variable]].
+The "matrix as a machine" idea, put to work inside a network → [[Linear Projection]].

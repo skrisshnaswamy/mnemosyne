@@ -1,3 +1,21 @@
+---
+aliases:
+  - Gradient
+  - Partial Derivative
+  - Jacobian
+  - Hessian
+  - Curvature
+tags:
+  - fundamentals
+  - calculus
+  - optimization
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** How much the output moves when you nudge the input. One input → a **derivative**. Many inputs → a **gradient** (a vector). Many outputs too → a **Jacobian** (a matrix). Differentiate twice → the **Hessian** (curvature).
+> **Metaphor:** A ball on hilly terrain. The slope says which way it rolls; the curvature says whether it's sitting in a bowl, on a hilltop, or on a saddle.
+> **Where it bites:** Every optimizer. Gradient descent only knows the slope; Newton's method also knows the curvature; [[Momentum]] fakes some of that curvature knowledge using memory instead.
+
+---
 # Derivative
 
 A derivative of a function is basically a way to tell how much does the function's outcome change, when the input is changed by a unit measure.
@@ -199,3 +217,12 @@ You see, when you analyze a function, you have fundamental properties like the f
 | **Weakness**  | Can be very slow; oscillates in ravines.              | Requires tuning an extra hyperparameter (`beta`).         | Calculating the Hessian is extremely expensive/impossible for large models. |
 
 **Conclusion:** Momentum is a brilliant and computationally cheap _trick_ that uses the history of first derivatives to navigate complex surfaces more effectively. It mimics some of the benefits of knowing the curvature without ever needing to calculate the expensive second derivative.
+
+---
+> [!SUCCESS] If you remember one thing
+> The **gradient is a compass**, the **Hessian is a map**. The compass is cheap and that's why we train with it; the map is far too expensive at scale — so tricks like [[Momentum]] exist to ~={pink}get some of the map's benefit at the compass's price.=~
+
+---
+# ⁉️
+We ended on momentum — the heavy ball that remembers where it's been. It deserves its own note → [[Momentum]].
+And the other open question: a network has *millions* of inputs to differentiate with respect to. How do you compute that gradient without it costing the earth? → [[Backpropagation]] → [[Vector Jacobian Product]].

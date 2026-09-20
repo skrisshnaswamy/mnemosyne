@@ -1,3 +1,17 @@
+---
+aliases:
+  - DL
+  - Neural Networks
+tags:
+  - fundamentals
+  - deep-learning
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** Stack simple units into layers, let each layer learn a different level of abstraction, and train the whole thing by pushing the error backwards.
+> **Metaphor:** Learning to recognise a face — edges, then shapes, then eyes and noses, then people. Each layer builds on the last.
+> **Where it bites:** This note is the **spine**. It's the historical thread that every other note in the vault hangs off.
+
+---
 So, way back in the 50s Rosenblatt came up with an idea of [[#^perceptron|perceptron]].
 
 > [!NOTE] Perceptron
@@ -45,3 +59,77 @@ Instead of writing full Jacobian matrices (which are huge), we multiply the “v
 This efficiently computes ∂L/∂weights — the actual gradient needed to update the weights.
 
 So in essence: the VJP simplifies how we compute gradients layer by layer.
+
+That's the [[Vector Jacobian Product|VJP]], and it's what makes training a deep network computationally possible at all.
+
+---
+# But it still didn't work — the long winter ❄️
+
+Here's the part of the story people skip. We had MLPs in the 80s. We had [[Backpropagation|backprop]] in 1986. And deep learning still didn't work for **another twenty-five years**.
+
+Why? Three things were missing, and it's worth knowing which:
+
+1. **Data.** Backprop-trained networks are enormously data-hungry, and there simply weren't labelled datasets of the right scale.
+2. **Compute.** Nobody had realised that a graphics card — built to shade millions of pixels in parallel — is exactly the machine for multiplying large matrices. See [[GPU processing]].
+3. **The gradient wouldn't flow.** With sigmoid activations, whose derivative maxes out at $0.25$, a deep stack **guarantees** the gradient shrinks at every layer. Deep networks were trainable in theory and untrainable in practice — [[Backpropagation#^vanishing-gradients|vanishing gradients]].
+
+So the field went quiet, twice, and neural networks became slightly embarrassing to work on.
+
+---
+# The thaw — 2012
+
+**AlexNet** wins ImageNet by a margin so large it ends the argument. → [[ImageNet Classification with Deep CNNs (AlexNet)]]
+
+It wasn't a new idea. It was the three missing pieces arriving at once: **ImageNet** (the data), **two GPUs** (the compute), and **ReLU** (whose derivative is exactly $1$ for positive inputs, so the gradient passes through undamped — the fix for problem 3).
+
+> [!SUCCESS] The lesson people keep re-learning
+> The breakthrough wasn't a cleverer algorithm. It was ~={blue}an old algorithm finally meeting enough data and enough compute=~ — plus one small change to stop the gradient dying. That pattern repeats throughout this history. ^scale-not-cleverness
+
+---
+# Then everything became an architecture problem
+
+With gradients flowing, the question became: **what shape should the network be?** Each answer is really a statement about what structure the data has.
+
+### CNNs — exploit locality
+A pixel relates to its neighbours, and a cat is a cat wherever it appears. So share the same small filter across the whole image. Massively fewer parameters, and translation invariance built in rather than learned.
+
+**[[Deep Residual Learning for Image Recognition (ResNet)|ResNet]]** (2015) then made *depth* work by adding a `+x` shortcut, giving the gradient a path with local derivative exactly $1$ — a motorway straight back to the early layers. This is the single most important architectural idea for training depth, and it is in essentially everything now, transformers included.
+
+### RNNs — exploit sequence
+Feed the hidden state back in, so the network has memory. But repeated multiplication brings vanishing gradients back with a vengeance — solved with [[Gated Activation|gates]] in the LSTM. Sequential by construction, so you cannot parallelise across time, which eventually became the fatal limitation.
+
+### Transformers — drop recurrence entirely
+[[Attention Is All You Need|Attention is all you need]] (2017). Instead of passing a state along a chain, let every token look directly at every other token via [[Query, Key, and Value (QKV)|Q, K and V]]. The path between any two positions is now length **one**, not length $n$ — no vanishing gradient across time, and (crucially) the whole sequence trains in **parallel**.
+
+> [!TIP] Why transformers actually won
+> Not because attention is a smarter mechanism than recurrence. Because it's **parallelisable**, which means it can absorb far more data and compute per unit of wall-clock time. It won on scalability, and [[Foundation Models#Scale is not a detail — it's the mechanism|scale was the mechanism]]. 🏎️
+
+---
+# And then scale became the whole story
+
+Once one architecture handled text, images, audio and video, progress stopped being about invention and became about **magnitude**.
+
+[[Scaling Laws for Neural Language Models|Scaling laws]] showed loss falls as a smooth power law in model size, data and compute — you can *forecast* the performance of a model you haven't trained. [[Training Compute-Optimal Large Language Models (Chinchilla)|Chinchilla]] then corrected the recipe: scale parameters and data **together**, roughly 20 tokens per parameter.
+
+Combine that with self-supervision — getting labels free from the data's own structure — and you arrive at [[Foundation Models]]: train once at enormous cost, adapt cheaply forever.
+
+---
+# The thread, in one place
+
+| Era | Problem | Fix |
+|---|---|---|
+| 1958 | Linear boundaries only | Perceptron → XOR kills it |
+| 1986 | Can't train hidden layers | [[Backpropagation]] |
+| 1986–2012 | Gradients vanish, no data, no compute | ❄️ the winter |
+| 2012 | — | ReLU + GPUs + ImageNet |
+| 2015 | Depth still hard | Residual connections |
+| 2017 | Sequences can't parallelise | [[Causal Attention\|Attention]] |
+| 2020– | What now? | **Scale**, and [[Foundation Models]] |
+
+> [!SUCCESS] If you remember one thing
+> Nearly every milestone here is a fix for the same underlying problem: ~={pink}**keeping a useful gradient flowing through a long chain of multiplications.**=~ ReLU, residuals, normalisation, gates, attention — all of them, in different clothes.
+
+---
+# ⁉️
+The mechanics under all of this: [[Backpropagation]] → [[Vector Jacobian Product]] → [[Pytorch Autograd]].
+The maths under *that*: [[Derivative]] and [[Fundamentals]].

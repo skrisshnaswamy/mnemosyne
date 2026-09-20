@@ -1,5 +1,18 @@
 ---
+aliases:
+  - PID
+  - Proportional Integral Derivative Controller
+  - Proportional Control
 tags:
+  - control-theory
+  - decision-sciences
+  - fundamentals
+---
+> [!ABSTRACT] 🧠 Recall
+> **In one line:** Correct a system toward a target using three views of the error — how big it is **now** (P), how much has piled up in the **past** (I), and how fast it's **changing** (D).
+> **Metaphor:** Driving at 60 mph. The gas pedal is the actuator, the speedometer gap is the error, and you are the controller.
+> **Where it bites:** Steady-state error (why P alone never quite arrives), overshoot and oscillation, and the feedback loop underneath all of [[Decision Sciences]].
+
 ---
 PID stands for **P**roprotional **I**ntegral **D**erivative Controller
 
@@ -106,4 +119,6 @@ Essentially, we use the *cumulative past errors* to speed up (or to add) and we 
 # ⁉️
 But what if our sensors are noisy? and we don't have perfect information about our speed or position? What if the very "state" of our system is uncertain?
 If you can't tell the difference between a real change and a noisy sensor reading, you'll be constantly misled. This leads to the next big breakthrough: the **[[Kalman Filter]]**.
+
+Or, if you'd rather stay with control a little longer — how do you tell whether this controller is actually any *good*? → [[Step Response]]. (The whole map: [[Control and Reinforcement Learning]].)
 
