@@ -88,3 +88,5 @@ flowchart TD
 Smaller cache means more requests fit at once. But the naive way of batching them — wait for a group, run them in lockstep, wait for the slowest — throws most of that gain away.
 
 → [[Continuous Batching]]
+
+*On the [[Attention]] path: GQA shrank the cache by **deleting** K/V heads. There's a way to keep all 64 and shrink it further →* [[Multi-head Latent Attention]]

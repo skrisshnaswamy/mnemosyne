@@ -10,6 +10,7 @@ tags:
   - inference
   - performance
 ---
+
 > [!ABSTRACT] 🧠 Recall
 > **In one line:** Inference is **two different jobs**: reading the prompt (one big parallel matmul, compute-bound) and writing the answer (one token at a time, memory-bound).
 > **Metaphor:** A chef reading the whole recipe in one glance, then plating one dish at a time.
@@ -31,9 +32,9 @@ Same model. Same GPU. Why?
 ---
 # The chef
 
-A chef gets a recipe card and an order for 50 covers.
+Imagine a chef gets a recipe card and an order for 50 covers.
 
-**Reading the card** is a single glance. Ingredients, steps, quantities — they're all there at once, and nothing about step 7 stops him reading step 2. He can absorb the whole thing in parallel.
+**Reading the card** is a single glance. It tells him about the ingredients, steps, quantities — they're all there at once, and nothing about step 1 stops him reading step 2. He can absorb the whole thing in parallel.
 
 **Cooking** is the opposite. He can't plate dish 12 before dish 11 — and crucially, he keeps walking back to the walk-in fridge for every single dish. The knife work is fast. The **walk** is what takes the time.
 
@@ -43,7 +44,21 @@ That's the whole distinction.
 > Processing the entire input prompt in **one forward pass**. All $n$ tokens go through the network simultaneously as a big matrix. The GPU's arithmetic units are saturated — this phase is ~={blue}compute-bound=~. Cost scales with prompt length (and quadratically in attention). Determines **Time To First Token (TTFT)**. ^prefill-def
 
 > [!NOTE] Decode
-> Generating the output **one token at a time**. Each step processes a *single* token, but to do it you must read the **entire model's weights** out of HBM into the compute units. One token of arithmetic, gigabytes of memory traffic — this phase is ~={red}memory-bandwidth-bound=~. Determines **tokens per second (TPS)** / inter-token latency. ^decode-def
+> Generating the output **one token at a time** (~={green}auto-regressive=~). Each step processes a *single* token, but to do it you must read the **entire model's weights** out of HBM into the compute units. One token of arithmetic, gigabytes of memory traffic — this phase is ~={red}memory-bandwidth-bound=~. Determines **tokens per second (TPS)** / inter-token latency. ^decode-def
+
+> [!ABSTRACT] HBM - High Bandwidth Memory
+> It's the GPU's own RAM.
+> the "80GB" in a H100 spec sheet. That's the machine's HBM btw.
+>
+>Physically it's DRAM dyes stacked vertically, sitting on the same package as the GPU chip and wired to it with a very wide bus. That stacking is where the bandwidth comes from.
+>
+> Though, "High" is relative to ordinary system RAM:
+> Like a normal Desktop DDR5 gives you a bandwidth of roughly ~0.08 TB/s. But a H100 HBM3 would give you ~3 TB/s. But then again, an On-chip SRAM gives you ~19 TB/s. 
+> 
+> FYI, the whole argument behind [[Flash Attention|FlashAttention]] is infact the gap between the GPU's HBM and the On-chip SRAM bandwidth.
+>And the irony is exactly what ~={blue}Prefill and Decode=~ is about: it's called **high bandwidth**, and it's _still_ the bottleneck. During decode the GPU spends most of its time _waiting_ for weights to travel from HBM to the compute units, _not doing arithmetic_.
+
+
 
 ---
 # Why decode is so wasteful

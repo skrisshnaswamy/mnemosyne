@@ -108,3 +108,5 @@ The **Vanilla Encoder** from the tranformer paper created a unique Q, K, and V u
 This lets every token see every other token — including ones that come **after** it. Fine when reading a whole sentence. Fatal when you're supposed to be *predicting* the next word, since the answer is sitting right there.
 
 → [[Causal Attention]]
+
+*On the [[Attention]] path: before the mask, there's the question of why the 8192 dimensions get cut into 64 slices in the first place →* [[Multi-Head Attention]]

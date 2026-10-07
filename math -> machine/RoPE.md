@@ -94,3 +94,5 @@ Rotate each token's vector by an angle proportional to its position. When you la
 So position can be stretched. The other wall doesn't move so easily: attention is still $O(n^2)$, and the [[KV Cache]] still grows linearly with every token you add.
 
 → [[Long Context]]
+
+*On the [[Attention]] path: take the $O(n^2)$ wall first, and note that the fix changes the cost without changing a single output bit →* [[Flash Attention]]

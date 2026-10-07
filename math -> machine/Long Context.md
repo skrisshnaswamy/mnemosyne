@@ -111,3 +111,5 @@ Related: [[LatentPress- Context Compression Beyond Text and Vision]], [[SAS- Sim
 Everything up to here makes the model a better *reader*. It still can't check today's price, run a query, or send an email. It can only produce text.
 
 → [[Tool Use]]
+
+*End of the [[Attention]] path — the four attacks on the $n^2$ bill (move fewer bytes, store less, compute fewer pairs, drop the softmax) all land here. ↩ back to* [[Attention]]

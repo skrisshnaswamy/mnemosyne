@@ -86,3 +86,5 @@ Switching to Flash Attention produced a similar drop in resource usage to the [[
 ---
 # ⁉️
 Flash Attention makes attention cheap in memory. The other half of that fight is making every number itself smaller → [[Mixed Precision training]].
+
+*On the [[Attention]] path: Flash left the architecture alone. The next moves don't — they change what gets stored per token →* [[Grouped Query Attention]]

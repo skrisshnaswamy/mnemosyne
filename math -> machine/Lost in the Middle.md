@@ -87,6 +87,6 @@ Three contributing causes, and the third is the one worth internalising:
 
 
 # ⁉️
-So the window is finite, unevenly read, and wiped between requests. If you want a system that genuinely remembers a user across weeks, the window cannot be where that lives.
+Ordering the chunks assumes the chunks are the right size in the first place. They usually aren't — and the cut that decides what can be *found* is made long before any of this, at ingest.
 
-→ [[Memory]]
+→ [[Chunking]]

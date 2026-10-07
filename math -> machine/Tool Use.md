@@ -46,6 +46,51 @@ The consultant's authority is exactly zero. Ops' authority is exactly what ops w
 > The model is given tool **schemas** (name, description, JSON-Schema parameters) in its context. Trained to recognise when a tool is warranted, it emits a call in a dedicated message role. The runtime executes it and appends a `tool` result message. The loop repeats until the model answers in natural language. ^tool-use-def
 
 ---
+# What actually goes over the wire 📡
+
+"Function calling" sounds like machinery. It's four messages, and seeing them removes most of the mystery.
+
+**1 — you send the tool definitions alongside the conversation.** They are part of the prompt; they cost tokens on every single request (~150–250 each, which is why fourteen tools is ~2,800 tokens a turn — see [[Context Engineering]]).
+
+```json
+{"name": "lookup_policy",
+ "description": "Get the refund policy for a product tier. Use for questions about refunds, returns or cancellations.",
+ "input_schema": {"type": "object",
+                  "properties": {"product": {"type": "string", "enum": ["Basic","Pro","Enterprise"]}},
+                  "required": ["product"]}}
+```
+
+**2 — the model replies with a tool-call message instead of text.** Note `stop_reason`: this is a *structurally different* end to the turn, not a string you parse out of prose.
+
+```json
+{"role": "assistant",
+ "stop_reason": "tool_use",
+ "content": [{"type": "tool_use",
+              "id": "toolu_01A9…",
+              "name": "lookup_policy",
+              "input": {"product": "Pro"}}]}
+```
+
+**3 — your executor runs it and appends a result message**, matched back by `id`. The result is a *user*-role message: from the model's point of view, the world answered.
+
+```json
+{"role": "user",
+ "content": [{"type": "tool_result",
+              "tool_use_id": "toolu_01A9…",
+              "content": "Refund window: 30 days from delivery."}]}
+```
+
+**4 — you call the model again with all of it**, and this time it answers in natural language. That's the loop. Repeat from 2 while `stop_reason` is `tool_use`.
+
+> [!TIP] Four details that cause most of the bugs
+> - **The `id` is the join key.** Every `tool_use` must get exactly one `tool_result` with the matching `tool_use_id`, in the next message, or the request is rejected.
+> - **Several `tool_use` blocks can arrive in one message.** Run them concurrently and return *all* results in one user message — that's the parallel win below.
+> - **Errors go back as content, not as exceptions.** Set `is_error` and put a readable message in: `{"error": "date must be YYYY-MM-DD, got '3rd March'"}` lets the model self-correct on the next turn.
+> - **When [[Streaming|streaming]], arguments arrive as string fragments** across chunks, keyed by index. Accumulate, then parse once at the end — never `json.loads` a partial buffer. 🧵
+>
+> OpenAI's shape differs in names (`tools[].function`, `tool_calls[]`, a `tool`-role result message with `tool_call_id`) and not at all in structure. Any [[LangChain|abstraction layer]] you use is normalising exactly these four messages. ^tool-wire-format
+
+---
 # Why this changed what LLMs are 🔓
 
 A text model became a system that can act:

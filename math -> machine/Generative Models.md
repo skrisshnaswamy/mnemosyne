@@ -20,110 +20,203 @@ tags:
 > **Where it bites:** Use this page to *find* the note. Use the chain at the bottom to read them in order.
 
 ---
-You have a folder of ten million photographs. You want a machine that produces **an eleven-millionth** — not a copy of any of them, not an average of them, but a new one that could have been in the folder.
 
-That's the whole problem. Nobody can write down the rule for "a plausible photograph"; you only have examples. So you need a machine that starts from something trivially easy to produce — **random noise** — and turns it into something that looks like it came from the folder.
+**Generative Modeling** is training a computer to turn simple random noise (like TV static) into realistic data (like a photo, text, or audio).
+
+Because we cannot write down a exact mathematical formula for "what makes an image look real," we train neural networks using real examples to map random numbers to realistic data.
+
+## The Sculptor Metaphor
+
+- **Real Concept**: Generative models start with a simple Gaussian probability distribution of random noise $p(z)$ and gradually transform it into a complex distribution of real data $p(x)$.    
+- **Metaphor**: Think of random noise as a block of marble. Generating an image is like a sculptor chipping away marble to reveal the statue inside.
+- **Where the metaphor breaks**: A sculptor only _remores_ material. Generative models actually calculate vectors and directions in multi-dimensional space to construct coherent patterns step-by-step.
+- **Plain Technical Meaning**: Every generative model learns a specific mathematical rule to transform unstructured random noise vectors into structured data vectors.
 
 ~={blue}Every family of generative model is a different answer to two questions: **what path do you take from noise to data — and what do you train a network to do along it?**=~
 
-So rather than a glossary, follow the answers.
+## 🔺 The Central Obstacle: The Math Wall
+To mathematically calculate how likely an image is, you have to divide by the sum of _every possible image configuration_.
 
----
-# 1. The problem
+- **The Problem:** Calculating every possible image configuration is mathematically impossible (intractable).
+- **The Solution:** Every generative model family is just a clever trick to bypass or approximate this impossible step.
 
-→ **[[Maximum Likelihood]]** — turn the knobs until your data stops being a surprise. And *why* likelihood models blur while GANs collapse.
+The two notes underneath that obstacle, before any family arrives:
+
+→ **[[Maximum Likelihood]]** — turn the knobs until your data stops being a surprise. Also *why* likelihood models blur while GANs collapse.
 → **[[Latent Variable Models]]** — a handful of hidden sliders drive a million pixels. *Noise in → network → data out* is the template for everything below.
-→ **[[KL Divergence]]** · **[[Cross Entropy]]** · **[[Random variable]]** — the measuring sticks underneath.h,hoh
+→ **[[KL Divergence]]** · **[[Cross Entropy]]** · **[[Random variable]]** — the measuring sticks underneath all of it.
 
-> [!NOTE] The one sentence to internalise here
-> ~={blue}Normalising a probability over a few thousand classes is trivial; over all possible images it's impossible.=~ Every family below is a way of getting round that one obstacle. ^the-normalisation-problem
+## The Generative Trilemma
 
----
-# 2. Write the density down
+You can almost never get all three at once:
 
-*Keep a real probability — and pay for it somewhere.*
+```
+                  [ High Quality ]
+                        /  \
+                       /    \
+                      /   🔺  \
+                     /         \
+[ High Diversity ] -------------- [ Fast (1 Step) ]
+```
 
-→ **[[Auto-regressive models]]** — chain rule: one element at a time. Exact likelihood; slow, sequential sampling. (How LLMs — and some image models — work.)
-→ **[[Normalizing Flows]]** — invertible warps, and keep the books on how much you stretched. Exact density; architecture in handcuffs.
-→ **[[Energy-Based Models]]** — output one number, *plausibility*; give up on the normalising constant. Total freedom — and **the slope still works**. The bridge to diffusion.
+- **GANs:** High Quality + Fast _(Lacks Diversity / Mode Collapse)_
+- **VAEs / Flows:** High Diversity + Fast _(Lacks Quality / Lacks Sharpness / Blurry)_
+- **Diffusion:** High Quality + High Diversity _(Lacks Speed / Needs many steps)_
 
----
-# 3. Compress, then decode
+## 🗺️ The 5 Main Model Families
 
-→ **[[Autoencoder]]** — squeeze through a bottleneck and rebuild. A compressor, *not* a generator — and why.
-→ **[[Variational Autoencoder]]** — encode to a fuzzy cloud, pull the clouds toward a bell curve. Sampleable; blurry. ELBO and the reparameterisation trick live here.
-→ **[[VQ-VAE]]** — snap every patch to a codebook entry. An image becomes a grid of **tokens**. BPE for pixels.
+### 1. Direct Density Models (Writing Down the Odds)
 
----
-# 4. Play a game
+Instead of guessing, these models try to write down exact mathematical probabilities.
+- **Autoregressive Models** (e.g., GPT, PixelCNN)
+    - **How it works:** Predicts data element-by-element (pixel-by-pixel or word-by-word), using the previous elements to predict the next.
+    - **Trade-off:** Exact probabilities, but painfully slow generation.
+    
+- **Normalizing Flows**  
+    - **How it works:** Uses reversible mathematical equations to stretch and warp a simple noise distribution directly into the shape of real data.
+    - **Trade-off:** Exact probabilities, but the math forces strict architectural limits on the network.
+    
+- **Energy-Based Models (EBMs)**  
+    - **How it works:** Assigns a single "unrealism score" (energy) to an image. Lower energy = more realistic.
+    - **Key Insight:** You don't need to know the total probability of all images—you only need to know the **slope** (which direction makes the image lower energy).
 
-→ **[[Generative Adverserial Network]]** — a forger and a detective. No likelihood at all; razor-sharp; unstable.
-→ **[[Mode Collapse]]** — the forger finds one painting that fools the detective and paints it forever.
+→ **[[Auto-regressive models]]** · **[[Normalizing Flows]]** · **[[Energy-Based Models]]**
 
----
-# 5. Learn the slope, not the height
+That last one is the bridge to everything modern. Hold onto it — "only the slope matters" comes back in family 4.
 
-*The idea that unlocked everything after it.*
+### 2. Compression Models (Squeeze & Rebuild)
 
-→ **[[Score Function]]** — an arrow, at every point in space, toward "more like the data". Needs no normalising constant, and **learning to denoise *is* learning the score**.
-→ **[[Langevin Dynamics]]** — follow the arrows, plus exactly the right amount of noise. Finds the right places; gets the proportions wrong — unless you anneal the noise. Which is…
+Pass the data through a tight bottleneck to extract its core meaning (latents).
 
----
-# 6. Destroy, then rebuild
+- **Autoencoder (AE)**
+    - **How it works:** Compresses an image into a tiny vector (code), then rebuilds it.
+    - **Limitation:** Great for compressing, but cannot generate new random images smoothly because its latent space has empty gaps.
+    
+- **Variational Autoencoder (VAE)** 
+    - **How it works:** Compresses the image into a smooth, randomized probability distribution (a fuzzy cloud) rather than a single fixed point.
+    - **Trade-off:** Easy to sample new data, but outputs are often blurry because the model averages together multiple possible realistic details.
+    
+- **VQ-VAE** 
+    - **How it works:** Snaps the latent vector to a grid of predefined codebook numbers (discrete tokens). Think of it as "building blocks" for visual features.
 
-→ **[[Diffusion Models]]** — replace one impossible leap with a thousand easy steps. Sharp **and** diverse **and** stable — and slow. Start here.
-→ **[[Forward Diffusion Process]]** — a crossfade from image to static that you can jump into at any point. The **noise schedule** decides what the model gets good at.
-→ **[[Denoising Objective]]** — noise an image, predict the noise, MSE. ε vs x₀ vs v. *The loss curve will lie to you.*
-→ **[[Diffusion Sampling]]** — step a little toward a blurry guess; repeat. Stochastic vs deterministic; DDIM; what the sampler names mean.
-→ **[[Score SDE]]** — the Rosetta stone. Forward = an SDE you design; reverse = fixed by the score; and a deterministic ODE twin with the same distribution.
+→ **[[Autoencoder]]** · **[[Variational Autoencoder]]** · **[[VQ-VAE]]**
 
-> [!TIP] The trilemma 🔺
-> **Quality · coverage · speed — pick two.** GANs: quality + speed. VAEs and flows: coverage + speed. Diffusion: quality + coverage. Section 7 is the hunt for the third. ^trilemma
+### 3. Adversarial Models (The Game)
 
----
-# 7. Straighten the path
+Skip calculating probabilities entirely. Treat generation as a game between two networks.
 
-→ **[[Neural ODE]]** — a network that outputs a *velocity*; integrate it to travel from noise to data. Free invertibility; originally too expensive to train.
-→ **[[Flow Matching]]** — draw a straight line from noise to data, regress the velocity. Diffusion with the scaffolding removed. (*This is what "flow control" usually turns out to mean.*)
-→ **[[Rectified Flow]]** — paths curve because training pairs **cross**. Re-pair them, the flow goes straight, and a straight flow is a one-step generator.
-→ **[[Consistency Models]]** — don't learn the step; learn the destination. 1–4 step generation, by distillation.
+- **Generative Adversarial Network (GAN)**
+    - **How it works:**
+        1. **Generator (The Forger):** Tries to create fake images from noise.
+        2. **Discriminator (The Detective):** Tries to spot if an image is fake or real.
+    - **Trade-off:** Generates razor-sharp images instantly in 1 step, but training is unstable and prone to **Mode Collapse** (the forger finds one single fake image that tricks the detective, and outputs only that image forever).
 
----
-# 8. Steer it, and make it affordable
+→ **[[Generative Adverserial Network]]** · **[[Mode Collapse]]**
 
-→ **[[Conditional Generation]]** — the prompt is just another input. Concatenate, modulate, or cross-attend.
-→ **[[Classifier-Free Guidance]]** — predict with and without the prompt; exaggerate the difference. The fidelity ↔ diversity dial. Costs two passes.
-→ **[[CLIP]]** — one shared map for pictures and sentences. How the prompt gets in — and why prompts are read as a bag of concepts.
-→ **[[Latent Diffusion]]** — autoencoder for the pixels, diffusion for the meaning. 48× cheaper. *This is Stable Diffusion.*
+### 4. Denoising & Diffusion (1,000 Small Steps)
+
+Instead of making one giant leap from noise to image, take hundreds of tiny cleaning steps.
+
+```
+[ Pure Static ]  ->  [ Denoise 1% ]  ->  [ Denoise 1% ]  -> ... ->  [ Clean Image ]
+```
+
+- **Score Function & Score Matching**
+    - **Definition:** The "score" is an arrow pointing in the direction of higher data density (more realism).
+    - **How it works:** Learning to remove a small amount of noise from an image is mathematically identical to finding the score arrow.
+
+- **Diffusion Models (e.g., DDPM)**
+    - **Forward Process:** Slowly destroy an image by adding Gaussian noise over ~1,000 steps until it becomes pure static.
+    - **Reverse Process:** Train a neural network to predict the noise added at any given step, and subtract it.
+    - **Trade-off:** Top-tier image quality and full diversity, but generation requires dozens to hundreds of network passes.
+
+→ **[[Score Function]]** — the arrow, at every point in space, pointing toward "more like the data".
+→ **[[Langevin Dynamics]]** — follow the arrows, plus exactly the right amount of noise. Gets the locations right and the proportions wrong, unless you anneal.
+→ **[[Diffusion Models]]** — one impossible leap replaced by a thousand easy steps. **Start here** for this family.
+→ **[[Forward Diffusion Process]]** — a crossfade from image to static that you can jump into at any point. The noise schedule decides what the model gets good at.
+→ **[[Denoising Objective]]** — noise an image, predict the noise, MSE. ε vs x₀ vs v — and the loss curve will lie to you.
+→ **[[Diffusion Sampling]]** — step a little toward a blurry guess, then repeat. What all the sampler names actually mean.
+→ **[[Score SDE]]** — the framework that shows diffusion and score matching were the same thing all along.
+
+### 5. Flow Matching & Distillation (Straightening the Path)
+
+The modern evolution of diffusion designed to solve the speed problem.
+
+- **Flow Matching / Rectified Flow**
+    - **How it works:** Standard diffusion paths curve randomly through noise space. Flow Matching draws a **straight line** directly from noise to the target image.
+    - **Why it matters:** Straight paths allow step-solvers to take massive jumps without losing image quality.
+    
+- **Consistency Models**
+    - **How it works:** Instead of learning how to take one small step along the path, the model is trained to predict the final destination directly from any point on the trajectory.
+    - **Result:** High-quality generation in just **1 to 4 steps**.
+
+→ **[[Neural ODE]]** · **[[Flow Matching]]** · **[[Rectified Flow]]** · **[[Consistency Models]]**
+
+*(If you arrived here calling this "flow control" — [[Flow Matching]] is the note you want.)*
+
+## Making Generation Fast & Controllable
+
+- **Latent Diffusion (e.g., Stable Diffusion):** Runs the diffusion process inside a compressed latent space (via a VAE) rather than full pixel resolution. This makes training and sampling up to 50x cheaper.
+- **CLIP:** A shared map between text and images. Translates your text prompt into vectors that guide the diffusion model's direction.
+-  **Classifier-Free Guidance (CFG):** Runs the model twice per step (once with your prompt, once without) and amplifies the difference to force the image to follow your prompt strictly. 
+- **Diffusion Transformer (DiT):** Replaces the traditional U-Net backbone with a Vision Transformer (ViT). Scales far better with compute and data size.
+
+→ **[[Conditional Generation]]** — the prompt is just another input. Concatenate it, modulate with it, or cross-attend to it.
+→ **[[Classifier-Free Guidance]]** — the fidelity ↔ diversity dial. Costs you two forward passes per step.
+→ **[[CLIP]]** — how the prompt gets in, and why prompts get read as a bag of concepts.
+→ **[[Latent Diffusion]]** — autoencoder for the pixels, diffusion for the meaning. 48× fewer numbers to touch on every step.
 → **[[U-Net]]** — down for *what*, up for *where*, bridges for *detail*.
-→ **[[Diffusion Transformer]]** — patches as tokens. Worse when small, better when large — and onto the LLM scaling curve.
+→ **[[Diffusion Transformer]]** — patches as tokens. Worse when small, better when large, and onto the LLM scaling curve.
 → **[[Controlling Diffusion]]** — img2img, inpainting, ControlNet, LoRA, DreamBooth, IP-Adapter, inversion.
-→ **[[Evaluating Generative Models]]** — fidelity *and* diversity, on sets. FID is a smoke alarm, not a judge.
+→ **[[Evaluating Generative Models]]** — fidelity *and* diversity, measured on sets. FID is a smoke alarm, not a judge.
+
+## Beyond images
+
+The same machinery, pointed at things that aren't pictures.
+
+→ **[[Discrete Diffusion]]** — for tokens, "noise" means masking. BERT's objective at every masking ratio at once.
+→ **[[Video Diffusion]]** — generate the whole clip as one block so the frames agree. Condition it on actions and it becomes a **world model**.
+→ **[[Diffusion Policy]]** — actions are just another thing to generate. And the reverse: RL fine-tuning *of* diffusion models.
+→ **[[JEPA]]** — the dissent. Predict the *meaning*, not the pixels. It can't generate, and that's on purpose.
+
+## Rosetta Stone: 1 Network, 5 Perspectives
+
+Different papers describe the exact same neural network using different targets. They are all mathematically equivalent conversions of one another:
+
+| **Framework**                 | **What the Network Predicts**                       |
+| ----------------------------- | --------------------------------------------------- |
+| **Energy-Based**              | The slope of the energy landscape ($\nabla_x E(x)$) |
+| **Score Matching**            | The score arrow ($\nabla_x \log p(x)$)              |
+| **DDPM (Standard Diffusion)** | The noise added to the image ($\varepsilon$)        |
+| **Denoising Autoencoders**    | The clean underlying image ($x_0$)                  |
+| **Flow Matching**             | The velocity vector ($v$)                           |
+
+## Quick Diagnostic Guide
+
+| **If your output looks like...**               | **The likely cause is...**                                                           |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Blurry or averaged out**                     | Likelihood-averaging issue (standard VAE behavior).                                  |
+| **Sharp, but repeating the exact same output** | **Mode Collapse** (GAN) or **CFG scale set too high**.                               |
+| **Oversaturated or "deep-fried" colors**       | **Classifier-Free Guidance (CFG)** scale is pushed too high.                         |
+| **Mangled fine text or tiny faces**            | You hit the compression ceiling of the **VAE decoder**.                              |
+| **Generation takes too long**                  | Unoptimized sampling steps (switch to **Rectified Flow** or **Consistency Models**). |
+
+And the same thing again, but pointing at which note to open:
 
 | If this is your problem | Read this |
 |---|---|
 | Samples are blurry / averaged | [[Maximum Likelihood#^covering-vs-seeking\|mode-covering]], [[Variational Autoencoder#^why-vaes-blur\|why VAEs blur]] |
 | Samples are sharp but all alike | [[Mode Collapse]], [[Classifier-Free Guidance]] (scale too high), [[Consistency Models#^distillation-tradeoffs\|distillation]] |
 | Generation is too slow | [[Diffusion Sampling]], [[Rectified Flow]], [[Consistency Models]], [[Latent Diffusion]] |
-| It ignores / garbles the prompt | [[Classifier-Free Guidance]], [[CLIP#^clip-bag-of-concepts\|CLIP's limits]], [[Conditional Generation#^text-encoder-is-the-bottleneck\|the text encoder]] |
-| Oversaturated, "deep-fried" | [[Classifier-Free Guidance]] — scale too high |
+| It ignores or garbles the prompt | [[Classifier-Free Guidance]], [[CLIP#^clip-bag-of-concepts\|CLIP's limits]], [[Conditional Generation#^text-encoder-is-the-bottleneck\|the text encoder]] |
 | Can't make very dark / very bright images | [[Forward Diffusion Process#^zero-terminal-snr\|zero terminal SNR]] |
 | Fine text and small faces are mangled | [[Latent Diffusion#^vae-is-the-ceiling\|the VAE is the ceiling]] |
 | Training loss is flat — is it learning? | [[Denoising Objective#^loss-curve-lies\|the loss curve lies]] |
 | Need pose / layout / a specific subject | [[Controlling Diffusion]] |
 | "FID improved" — do I believe it? | [[Evaluating Generative Models#^fid-blind-spots\|FID's blind spots]] |
 | What do the sampler names mean? | [[Diffusion Sampling#The decoder ring for sampler names 🔎\|the decoder ring]] |
-| Diffusion vs flow matching — what's the real difference? | [[Flow Matching#So how much straighter is it, really?\|the honest comparison]] |
+| Diffusion vs flow matching — the real difference? | [[Flow Matching#So how much straighter is it, really?\|the honest comparison]] |
 | Reading a paper full of $dx = f\,dt + g\,dw$ | [[Score SDE]] |
-| How do energy-based models relate to all this? | [[Energy-Based Models]] → [[Score Function]] |
-
----
-# 9. Beyond images
-
-→ **[[Discrete Diffusion]]** — for tokens, noise = masking. BERT's objective at every masking ratio. Diffusion language models.
-→ **[[Video Diffusion]]** — generate the clip as one block, so the frames agree. Condition on actions and it's a **world model**.
-→ **[[Diffusion Policy]]** — actions are just another thing to generate. And the reverse: RL fine-tuning *of* diffusion models.
-→ **[[JEPA]]** — the dissent: predict the *meaning*, not the pixels. Can't generate, on purpose.
 
 ---
 # The reading order 📖
@@ -140,53 +233,33 @@ Each note ends with a `# ⁉️` hook to the next, so the whole thing reads as o
 > 4. **Where does it run — pixels, a continuous latent, or tokens?**
 > 5. **How is it steered, and what did that cost in diversity?**
 >
-> ~={pink}And one line of history: *EBMs said "only the slope matters" → score matching learned the slope by denoising → diffusion made that work at every noise level → flow matching kept the idea and threw away the scaffolding.*=~ ^five-questions
-
----
-# The same network, five names 🎯
-
-The single most confusing thing in this literature, in one table:
-
-| Community | Calls the network's output | Relation |
-|---|---|---|
-| Energy-based | $-\nabla_x E(x)$ | the slope of the energy landscape |
-| Score matching | the **score** $\nabla_x \log p_t(x)$ | same thing |
-| DDPM | the **noise** $\varepsilon_\theta(x_t, t)$ | score × $(-\sigma_t)$ |
-| Denoising autoencoders | the **clean image** $\hat{x}_0$ | $(x_t - \sigma_t \varepsilon)/\alpha_t$ |
-| Flow matching | the **velocity** $v_\theta(x_t, t)$ | a linear mix of $\varepsilon$ and $x_0$ |
-
-*One network, one piece of information, five unit systems.*
+> ~={pink}Every model here is a different set of answers to those five.=~ ^five-questions
 
 ---
 # Papers worth reading in this area 📚
-[[Auto-Encoding Variational Bayes (VAE)]] · [[Generative Adversarial Networks]] · [[A Tutorial on Energy-Based Learning]] · [[Denoising Diffusion Probabilistic Models]] · [[Score-Based Generative Modeling through SDEs]] · [[Classifier-Free Diffusion Guidance]] · [[An Image is Worth 16x16 Words (ViT)]] · [[Representation Learning with Contrastive Predictive Coding (CPC - InfoNCE)]] · [[A Simple Framework for Contrastive Learning (SimCLR)]] · [[LLaDA-Image- Building Strong Image Generators with Fully Open Training Recipes]] · [[Studying Image Tokenizers as Visual Languages in Unified Multimodal Models]] · [[Self-Supervised Learning from Images with I-JEPA]] · [[LeJEPA- Provable and Scalable Self-Supervised Learning]] · [[Mastering Diverse Domains through World Models (DreamerV3)]] · [[LoRA- Low-Rank Adaptation of Large Language Models]] · [[The Bitter Lesson (essay)]]
+[[Auto-Encoding Variational Bayes (VAE)]] · [[Generative Adversarial Networks]] · [[Denoising Diffusion Probabilistic Models]] · [[Score-Based Generative Modeling through SDEs]] · [[Classifier-Free Diffusion Guidance]] · [[An Image is Worth 16x16 Words (ViT)]] · [[LeJEPA- Provable and Scalable Self-Supervised Learning]]
 
-*Not yet in `Papers/` and worth adding:* Sohl-Dickstein 2015 (the original diffusion paper) · Song & Ermon 2019 (NCSN) · DDIM · Improved DDPM · Latent Diffusion · CLIP · DiT · Flow Matching (Lipman) · Rectified Flow (Liu) · Consistency Models · ControlNet · SD3 (Esser) · EDM (Karras) · Diffusion Policy.
+Missing from `Papers/` and worth adding: DDIM · Latent Diffusion (LDM) · CLIP · DiT · Flow Matching · Rectified Flow · Consistency Models · ControlNet · EDM.
 
 ---
 ---
 #### 🖼️ How the families descend from one another
 
-![[generative_models_sculptor.png]]
-
 ```mermaid
 flowchart TD
-  ML["Maximum likelihood<br/>'make the data unsurprising'"] --> AR["Autoregressive<br/>exact, sequential"]
-  ML --> NF["Normalizing flows<br/>exact, invertible"]
-  ML --> VAE["VAE<br/>a bound; blurry"]
-  ML --> EBM["Energy-based<br/>unnormalised"]
-  ML -.->|"abandon likelihood"| GAN["GAN<br/>sharp; collapses"]
-  EBM -->|"only the slope matters"| SC["Score matching<br/>learn the slope by denoising"]
-  SC -->|"at every noise level"| DIFF["Diffusion"]
-  VAE -->|"a 1000-layer VAE with a fixed encoder"| DIFF
-  DIFF -->|"its ODE sampler is a flow"| FM["Flow matching<br/>regress a velocity on straight paths"]
-  NF -->|"continuous time"| NODE["Neural ODE / CNF"] --> FM
-  FM --> RF["Rectified flow · consistency<br/>1–4 steps"]
-  VAE -->|"as the compressor"| LDM["Latent diffusion<br/>Stable Diffusion, Flux"]
-  DIFF --> LDM
-  FM --> LDM
-  GAN -.->|"returns as a finishing loss"| RF
+  W["The Math Wall<br/>can't normalise over all images"]
+  W --> D1["Write the density down<br/>autoregressive · flows"]
+  W --> D2["Compress, then decode<br/>AE · VAE · VQ-VAE"]
+  W --> D3["Skip likelihood entirely<br/>GANs"]
+  W --> D4["Only the slope matters<br/>energy-based"]
+  D4 --> S["Score function"]
+  S --> DIFF["Diffusion<br/>a thousand small steps"]
+  DIFF --> FM["Flow matching<br/>draw the line straight"]
+  FM --> CM["Rectified flow · consistency<br/>1 to 4 steps"]
+  D2 -.->|"run diffusion in the latent,<br/>not the pixels"| DIFF
+  D3 -.->|"sharp but collapses"| DIFF
+  D1 -.->|"exact but slow"| DIFF
 ```
 
 # ⁉️
-The probability underneath all of this: [[Random variable]], [[KL Divergence]], [[Cross Entropy]], [[Beliefs]]. The sampling machinery: [[Monte Carlo Methods]], [[Markov Chain Monte Carlo]], [[Hamiltonian Monte Carlo]]. The networks: [[Deep Learning]], [[Query, Key, and Value (QKV)]]. Where generation meets decision-making: [[Control and Reinforcement Learning]]. And where it meets language: [[LLM Engineering]].
+The machinery underneath all of this — what a neural network is, how it's trained, what a loss actually measures — is [[Deep Learning]], [[Backpropagation]] and [[Cross Entropy]]. The probability underneath it is [[Random variable]], [[KL Divergence]] and [[Maximum Likelihood]]. And where generation meets language models: [[LLM Engineering]].

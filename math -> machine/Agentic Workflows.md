@@ -77,7 +77,7 @@ The critical difference isn't intelligence. It's that **her next action depends 
 ---
 # Why long-horizon agents fail 📉
 
-**Compounding error.** 95% reliability per step sounds fine. Over 20 steps: $0.95^{20} \approx 36\%$. This single multiplication explains most agent demos that don't survive contact with production. Fewer steps, or much higher per-step reliability, or checkpoints that verify — there is no fourth option.
+**Compounding error.** 95% reliability per step sounds fine. Over 20 steps: $0.95^{20} \approx 36\%$. This single multiplication explains most agent demos that don't survive contact with production. Fewer steps, or much higher per-step reliability, or checkpoints that verify — there is no fourth option. ^compounding-error
 
 **Context rot.** Every observation accumulates. By step 30 the window is full of stale tool output, the instructions are buried ([[Lost in the Middle]]), and quality drops. Fix: summarise, or externalise to a [[Memory|scratchpad]] file.
 

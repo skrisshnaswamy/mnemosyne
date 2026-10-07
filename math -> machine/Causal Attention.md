@@ -87,3 +87,5 @@ Other masks exist too, and they're all the same trick with a different triangle:
 ---
 # ⁉️
 Masking is what makes generation *possible*. Generating one token at a time, feeding each output back as the next input, is what makes a model → [[Auto-regressive models|autoregressive]].
+
+*On the [[Attention]] path: the mask decides who may look at whom **within** one sequence. The other half of that question is what happens when Q and K come from two different sequences entirely →* [[Cross Attention]]
